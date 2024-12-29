@@ -1,8 +1,29 @@
-# React + Vite
+PrivateRoute has been used to protect routes that need authentication.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Backend
+Api calls in backend
 
-Currently, two official plugins are available:
+## Routes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### User
+- Login - /api/auth/login
+- Register - /api/auth/register
+- Logout - /api/auth/logout
+- GetUser - /api/auth/getUser/:id
+- UpdateUser - /api/auth/updateUser/:id
+- DeleteUser - /api/auth/deleteUser/:id
+
+### Contact
+- Add to Contact - /api/contact/:id
+
+### Chat
+
+
+
+Folder Structure
+
+src
+- Components <!-- Reusables components used in the app -->
+- Pages <!-- Pages of the app -->
+- Utils <!-- Global State (Zustand is used) for the app -->
+- Services <!-- API Services used in the app -->

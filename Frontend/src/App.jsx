@@ -1,32 +1,57 @@
-import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import Navbar from "./Components/Pages/NavFoot/Navbar";
-import Home from "./Components/Pages/Home/Home";
-import Signup from "./Components/Pages/LoginSignup/Signup";
-import Login from "./Components/Pages/LoginSignup/Login";
-import NotFound from "./Components/Pages/NotFound";
-import { Toaster } from "react-hot-toast";
-import Footer from "./Components/Pages/NavFoot/Footer";
-import Prediction from "./Components/Pages/Prediction/Prediction";
-import Chatbot from "./Components/Pages/Chatbot/Chatbot";
+import React from "react";
+import { Outlet, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./Routes/ProtectedRoute.jsx";
+import AuthRoute from "./Routes/AuthRoute.jsx";
+import Home from "./Pages/Home.jsx";
+import Login from "./Pages/Auth/Login.jsx";
+import Register from "./Pages/Auth/Register.jsx";
 
 const App = () => {
   return (
-    <>
-      <Navbar />
-      <Toaster />
+    <div>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/prediction" element={<Prediction />} />
-        <Route path="/chat" element={<Chatbot />} />
+        {/** Auth routes */}
+        <Route element={<AuthRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
-        {/* 404 page */}
-        <Route path="*" element={<NotFound />} />
+        {/** Private routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<div>Profile</div>} />
+
+          {/** Dashboard routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <div>
+                <Outlet />
+              </div>
+            }
+          >
+            <Route path="profile" element={<div>Dashboard Profile</div>} />
+            <Route path="contacts" element={<div>Dashboard Contacts</div>} />
+          </Route>
+
+          {/** Chat routes */}
+          <Route
+            path="/chat"
+            element={
+              <div>
+                <Outlet />
+              </div>
+            }
+          >
+            <Route path="group/:groupId" element={<div>Chat Group</div>} />
+            <Route path="user/:userId" element={<div>Chat User</div>} />
+          </Route>
+        </Route>
+
+        {/** Not Found */}
+        <Route path="*" element={<div>Not Found</div>} />
       </Routes>
-      <Footer />
-    </>
+    </div>
   );
 };
 
