@@ -10,6 +10,7 @@ app.use(cors());
 
 app.use("/api/user", proxy(process.env.USER_PORT));
 app.use("/api/admin", proxy(process.env.ADMIN_PORT));
+app.use("/api/test",proxy("http://localhost:4000"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

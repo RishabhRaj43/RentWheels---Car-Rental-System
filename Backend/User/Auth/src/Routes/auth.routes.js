@@ -1,9 +1,18 @@
 import express from "express";
-import { registerUser, searchUser } from "../Controller/auth.controller.js";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+  searchUser,
+} from "../Controller/auth.controller.js";
+import protectRoute from "../Middlewares/protectRoute.js";
+import checkUserLoggedIn from "../utils/checkLogin.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", registerUser);
-authRouter.get("/search",searchUser);
+authRouter.post("/register", checkUserLoggedIn, registerUser);
+authRouter.post("/login", checkUserLoggedIn, loginUser);
+authRouter.get("/search", protectRoute, searchUser);
+authRouter.delete("/logout", protectRoute, logoutUser);
 
 export default authRouter;

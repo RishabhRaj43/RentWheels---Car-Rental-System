@@ -1,11 +1,17 @@
 import mongoose from "mongoose";
+import env from "../env/env.js";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(env.MONGO_URI);
     console.log("Database connected");
   } catch (error) {
-    console.log(error);
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    });
+    process.exit(1);
   }
 };
 
