@@ -59,6 +59,9 @@ export const loginValidation = (data) => {
 };
 
 export const updateValidation = (data) => {
+  if (!data || Object.keys(data).length === 0 ) {
+    throw new Error("Data is required");
+  }
   const schema = joi.object({
     name: joi.string().min(3).messages({
       "string.min": "Name should have at least 3 characters",
@@ -83,5 +86,8 @@ export const updateValidation = (data) => {
       "string.min": "License number should have at least 5 characters",
     }),
   });
+
+  console.log(data);
+
   return schema.validate(data, { abortEarly: false });
 };

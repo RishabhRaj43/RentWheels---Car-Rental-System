@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose,{Types} from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -33,6 +33,7 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+    Rentals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rental" }],
   },
   {
     timestamps: true,

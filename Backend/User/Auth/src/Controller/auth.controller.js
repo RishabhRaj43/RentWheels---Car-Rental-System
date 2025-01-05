@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import {
   loginValidation,
   registerValidation,
+  updateValidation,
 } from "../Validation/AuthValidation.js";
 
 export const registerUser = async (req, res) => {
@@ -86,8 +87,44 @@ export const loginUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("token_user");
-    cache.del(req.email);
     return res.status(200).json({ message: "User logged out" });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    if (req.file) {
+      req.body.avatar = `${req.protocol}://${req.get("host")}/src/uploads/${
+        req.file.filename
+      }`;
+    }
+    const { error } = updateValidation(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+    if (req.body.password) {
+      const hashedPassword = await bcryptjs.hash(req.body.password, 6);
+      req.body.password = hashedPassword;
+    }
+
+    const user = await User.findOne({ email: req.email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const updatedUser = await User.findOneAndUpdate(
+      { email: req.email },
+      req.body,
+      { new: true }
+    );
+    let token;
+    if (req.body.email && req.body.email !== req.email) {
+      token = generateToken(updatedUser.email, res);
+    }
+    cache.set(user.email, updatedUser);
+    return res.status(200).json({ user: updatedUser, token });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: error.message });
