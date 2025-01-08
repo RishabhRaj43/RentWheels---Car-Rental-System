@@ -7,12 +7,19 @@ import {
   registerValidation,
   updateValidation,
 } from "../Validation/AuthValidation.js";
+import { generateOTP, sendRegisterOTP } from "../utils/sendRegisterOTP.js";
+import speakeasy from "speakeasy";
 
 export const registerUser = async (req, res) => {
   try {
     const { error } = registerValidation(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
+    }
+
+    const cachedUser = await cache.get(req.body.email);
+    if (cachedUser) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const existinguser = await User.findOne({ email: req.body.email });
@@ -24,13 +31,52 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcryptjs.hash(password, 6);
     req.body.password = hashedPassword;
 
-    const user = await User.create(req.body);
-    cache.set(user.email, user);
-    const token = generateToken(user.email, res);
+    const user = new User(req.body);
+    const otp = await generateOTP(user.email);
+    cache.set(user.email, { ...user.toObject(), otp }, 60 * 5); // 5 minutes
+    await sendRegisterOTP(user.email, otp);
 
-    return res.status(201).json({ user, token });
+    return res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
     console.log(error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const verifyOtp = async (req, res) => {
+  try {
+    const { otp } = req.body;
+    const email = req.query.email;
+    const cachedUser = await cache.get(email);
+    if (!cachedUser) {
+      return res.status(400).json({ message: "Pls Signup Again" });
+    }
+    const secret = cache.get(`${email}_secret`);
+    if (!secret) {
+      return res
+        .status(400)
+        .json({ message: "OTP has expired. Pls signup again" });
+    }
+    const isVerified = speakeasy.totp.verify({
+      secret: secret,
+      encoding: "base32",
+      token: otp,
+      window: 10,
+    });
+    if (!isVerified) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    const user = new User(cachedUser);
+    await user.save();
+    const token = generateToken(user.email, res);
+    cache.del(email);
+    cache.del(`${email}_secret`);
+    return res
+      .status(200)
+      .json({ token, user, message: "User registered successfully" });
+  } catch (error) {
+    console.log("Error in verifyOtp: ", error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -42,6 +88,9 @@ export const searchUser = async (req, res) => {
     if (cachedUser) {
       return res.status(200).json({ user: cachedUser });
     }
+
+    console.log(key, value);
+    
 
     const user = await User.findOne({ [key]: value });
     if (!user) {
@@ -60,6 +109,8 @@ export const searchUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("Email: ", email, "Password: ", password);
+    
     const { error } = loginValidation(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });

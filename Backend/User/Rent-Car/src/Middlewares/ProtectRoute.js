@@ -1,14 +1,11 @@
 import jwt from "jsonwebtoken";
+import env from "../Env/env.js";
 
 const protectRoute = async (req, res, next) => {
   try {
     const cookieToken = req.cookies["token_user"];
     const authHeader = req.headers["authorization"];
     let authHeadertoken;
-
-    if (!cookieToken && !authHeader) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
 
     if (authHeader && authHeader.startsWith("Bearer ")) {
       authHeadertoken = authHeader.split(" ")[1];
@@ -19,7 +16,7 @@ const protectRoute = async (req, res, next) => {
 
     const token = cookieToken || authHeadertoken;
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.JWT_SECRET);
 
     req.email = decoded.email;
     req.token = token;
