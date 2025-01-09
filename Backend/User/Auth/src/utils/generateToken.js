@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 import env from "../env/env.js";
 
-const generateToken = (email, res) => {
+const generateToken = ({ email, id }, res) => {
   try {
-    if(!env.JWT_SECRET){
+    if (!env.JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined");
     }
-    const token = jwt.sign({ email: email }, env.JWT_SECRET, {
+    const token = jwt.sign({ email: email, id: id }, env.JWT_SECRET, {
       expiresIn: "1d",
     });
 

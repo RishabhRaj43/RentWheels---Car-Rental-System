@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import env from "../../env/env.js";
+import env from "../../Env/env.js";
 
 const sendMail = async (email, otp) => {
   try {
@@ -16,10 +16,10 @@ const sendMail = async (email, otp) => {
       from: env.MAIL_USERNAME,
       to: email,
       subject: "Verification Code",
-      text: `The Verification code is ${otp}`,
+      text: `The Verification code for Admin is ${otp}`,
       html: `<h1>The Verification code is ${otp}</h1>
              <p>Please do not share this code with anyone</p>
-             <p>It will expire in 5 minutes</p>`,
+             <p>It will expire in 5 mins</p>`,
     };
     transporter.sendMail(mailOptions, (error) => {
       if (error) {

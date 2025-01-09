@@ -4,6 +4,12 @@ import protectRoute from "../Middlewares/ProtectRoute.js";
 
 const rentCarRouter = express.Router();
 
-rentCarRouter.get("/", protectRoute, rentCarController);
+rentCarRouter.get("/", protectRoute, async (req, res) => {
+  res.json({
+    message: "Hello User",
+  });
+});
+
+rentCarRouter.post("/rent-car", protectRoute, rentCarController);
 
 export default rentCarRouter;

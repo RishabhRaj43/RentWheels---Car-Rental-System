@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import env from "../Env/env.js";
 
-const protectRoute = async (req, res, next) => {
+const protectAdminRoute = async (req, res, next) => {
   try {
-    const cookieToken = req.cookies["token_user"];
+    const cookieToken = req.cookies["token_admin"];
     const authHeader = req.headers["authorization"];
     let authHeadertoken;
 
@@ -16,10 +16,10 @@ const protectRoute = async (req, res, next) => {
 
     const token = cookieToken || authHeadertoken;
 
-    const decoded = jwt.verify(token, env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.JWT_ADMIN_SECRET);
 
     req.email = decoded.email;
-    req.userId = decoded.id;
+    req.adminId = decoded.adminId;
     req.token = token;
     next();
   } catch (error) {
@@ -35,4 +35,4 @@ const protectRoute = async (req, res, next) => {
   }
 };
 
-export default protectRoute;
+export default protectAdminRoute;

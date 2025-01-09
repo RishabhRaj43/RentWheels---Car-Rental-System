@@ -8,6 +8,7 @@ const env = {
   RABBITMQ_URL: process.env.RABBITMQ_URL,
   JWT_SECRET: process.env.JWT_SECRET,
   BASE_URL: process.env.BASE_URL,
+  RENTAL_QUEUE: process.env.RENTAL_QUEUE,
 };
 
 export default env;

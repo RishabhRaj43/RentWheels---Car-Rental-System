@@ -1,7 +1,7 @@
 import amqplib from "amqplib";
 import env from "../../env/env.js";
 
-export let connection,channel;
+export let connection, channel;
 
 export const connectRabbitMq = async () => {
   try {
@@ -9,7 +9,7 @@ export const connectRabbitMq = async () => {
       connection = await amqplib.connect(env.RABBITMQ_URL);
     }
     channel = await connection.createChannel();
-    return connection;
+    return { connection, channel };
   } catch (error) {
     console.error("Error connecting to RabbitMQ:", error);
     throw new Error("Failed to connect to RabbitMQ");

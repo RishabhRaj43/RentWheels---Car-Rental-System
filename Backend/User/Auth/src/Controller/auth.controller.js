@@ -69,7 +69,7 @@ export const verifyOtp = async (req, res) => {
 
     const user = new User(cachedUser);
     await user.save();
-    const token = generateToken(user.email, res);
+    const token = generateToken({ email: user.email, id: user._id }, res);
     cache.del(email);
     cache.del(`${email}_secret`);
     return res
@@ -90,7 +90,6 @@ export const searchUser = async (req, res) => {
     }
 
     console.log(key, value);
-    
 
     const user = await User.findOne({ [key]: value });
     if (!user) {
@@ -110,7 +109,7 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log("Email: ", email, "Password: ", password);
-    
+
     const { error } = loginValidation(req.body);
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
@@ -123,7 +122,7 @@ export const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid password" });
     }
-    const token = generateToken(user.email, res);
+    const token = generateToken({ email: user.email, id: user._id }, res);
     const cachedUser = cache.get(user.email);
     if (!cachedUser) {
       cache.set(user.email, user);
