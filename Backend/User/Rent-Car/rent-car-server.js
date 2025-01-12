@@ -1,10 +1,16 @@
 import app from "./src/App/app.js";
 import { connectMongoDb } from "./src/Config/MongoDbConnect.js";
-import { connectRabbitMq } from "./src/Config/RabbitMq.js";
-import env from "./src/Env/env.js";
+import env from "./src/Config/Env/env.js";
+import { initSocket } from "./src/Config/Socket/SocketConfig.js";
+import http from "http";
 
-app.listen(env.PORT, async () => {
-  await connectRabbitMq();
+const startServer = async () => {
+  const server = http.createServer(app);
   await connectMongoDb();
-  console.log(`Server is running on port ${env.PORT}`);
-});
+  initSocket(server);
+  server.listen(env.PORT, () => {
+    console.log(`Server listening on port ${env.PORT}`);
+  });
+};
+
+startServer();

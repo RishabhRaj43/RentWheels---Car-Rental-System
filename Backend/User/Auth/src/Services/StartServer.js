@@ -1,16 +1,19 @@
 import connectDB from "../DB/ConnectDB.js";
-import env from "../env/env.js";
-import startBackGroundJobs from "../Events/StartBackGroundJobs.js";
+import http from "http";
+import env from "../config/env/env.js";
+import startBackGroundJobs from "../Handler/StartBackGroundJobs.js";
 import { connectRabbitMq } from "./Mq/rabbitMq.js";
+import socketConfig, { io } from "../config/Socket/SocketConfig.js";
 
 const startServer = async (app) => {
   try {
+    const server = http.createServer(app);
     await connectDB();
     await connectRabbitMq();
     await startBackGroundJobs();
-    console.log("RabbitMQ connected successfully");
-    app.listen(env.USER_AUTH_PORT, () => {
-      console.log(`Server is running on port ${env.USER_AUTH_PORT}`);
+    socketConfig(server);
+    server.listen(env.USER_AUTH_PORT, () => {
+      console.log(`Server running on port ${env.USER_AUTH_PORT}`);
     });
   } catch (error) {
     console.log("Error connecting to RabbitMQ or database:", error.message);

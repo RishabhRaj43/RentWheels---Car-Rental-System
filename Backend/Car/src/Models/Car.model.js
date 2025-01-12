@@ -54,6 +54,20 @@ const carSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    reviews: [
+      {
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        rating: {
+          type: Number,
+        },
+        review: {
+          type: String,
+        },
+      },
+    ],
     rentedBy: [
       {
         userId: {

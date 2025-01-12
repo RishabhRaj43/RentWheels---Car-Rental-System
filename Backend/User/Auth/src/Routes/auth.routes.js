@@ -19,7 +19,6 @@ authRouter.post("/login", checkUserLoggedIn, loginUser);
 authRouter.delete("/logout", logoutUser);
 
 authRouter.get("/search", protectRoute, searchUser);
-authRouter.get("/test", protectRoute, (req, res) => res.json(req.email));
 authRouter.put("/update", protectRoute, upload.single("avatar"), updateUser);
 
 export default authRouter;

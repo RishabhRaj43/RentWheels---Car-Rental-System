@@ -1,6 +1,6 @@
 import { connection, channel } from "../Services/Mq/rabbitMq.js";
 import cache from "../cache/cache.js";
-import env from "../env/env.js";
+import env from "../config/env/env.js";
 import speakeasy from "speakeasy";
 
 export const generateOTP = async (email) => {

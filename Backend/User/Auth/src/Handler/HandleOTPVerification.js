@@ -1,4 +1,4 @@
-import env from "../env/env.js";
+import env from "../config/env/env.js";
 import { connection, connectRabbitMq } from "../Services/Mq/rabbitMq.js";
 import sendMail from "../utils/Mail/sendMail.js";
 
