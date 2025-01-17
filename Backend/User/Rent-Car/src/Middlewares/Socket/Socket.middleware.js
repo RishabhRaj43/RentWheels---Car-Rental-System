@@ -11,7 +11,7 @@ export const socketMiddleware = async (socket, next) => {
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET);
 
-    socket.email = decoded.email;
+    socket.userEmail = decoded.email;
     socket.userId = decoded.id;
 
     next();

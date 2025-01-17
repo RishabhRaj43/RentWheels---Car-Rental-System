@@ -20,8 +20,7 @@ const generateToken = ({ email, id }, res) => {
     return token;
   } catch (error) {
     console.error(error);
-    res.status(401).json({ message: "Unauthorized" });
-    return error;
+    return res.status(401).json({ message: error.message });
   }
 };
 

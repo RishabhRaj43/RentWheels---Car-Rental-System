@@ -18,8 +18,8 @@ const protectAdminRoute = async (req, res, next) => {
 
     const decoded = jwt.verify(token, env.JWT_ADMIN_SECRET);
 
-    req.email = decoded.email;
-    req.adminId = decoded.adminId;
+    req.adminEmail = decoded.email;
+    req.adminId = decoded.id;
     req.token = token;
     next();
   } catch (error) {

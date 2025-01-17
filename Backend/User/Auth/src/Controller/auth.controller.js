@@ -27,16 +27,14 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const { password } = req.body;
-    const hashedPassword = await bcryptjs.hash(password, 6);
-    req.body.password = hashedPassword;
+    req.body.password = await bcryptjs.hash(req.body.password, 6);
 
     const user = new User(req.body);
-    const otp = await generateOTP(user.email);
+    // const otp = await generateOTP(user.email);
+    // await sendRegisterOTP(user.email, otp);
     cache.set(user.email, { ...user.toObject(), otp }, 60 * 5); // 5 minutes
-    await sendRegisterOTP(user.email, otp);
 
-    return res.status(200).json({ message: "OTP sent successfully" });
+    return res.status(200).json({ message: "OTP has been sent successfully" });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ message: error.message });
@@ -77,6 +75,23 @@ export const verifyOtp = async (req, res) => {
       .json({ token, user, message: "User registered successfully" });
   } catch (error) {
     console.log("Error in verifyOtp: ", error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+export const resendOtp = async (req, res) => {
+  try {
+    const email = req.query.email;
+    const cachedUser = await cache.get(email);
+    if (!cachedUser) {
+      return res.status(400).json({ message: "Pls Signup Again" });
+    }
+    const otp = await generateOTP(cachedUser.email);
+    await sendRegisterOTP(cachedUser.email, otp);
+    cache.set(email, { ...cachedUser, otp }, 60 * 5); // 5 minutes
+    return res.status(200).json({ message: "OTP has been sent successfully" });
+  } catch (error) {
+    console.log(error);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -160,17 +175,17 @@ export const updateUser = async (req, res) => {
       req.body.password = hashedPassword;
     }
 
-    const user = await User.findOne({ email: req.email });
+    const user = await User.findOne({ email: req.userEmail });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
     const updatedUser = await User.findOneAndUpdate(
-      { email: req.email },
+      { email: req.userEmail },
       req.body,
       { new: true }
     );
     let token;
-    if (req.body.email && req.body.email !== req.email) {
+    if (req.body.email && req.body.email !== req.userEmail) {
       token = generateToken(updatedUser.email, res);
     }
     cache.set(user.email, updatedUser);

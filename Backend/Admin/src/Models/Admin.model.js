@@ -1,11 +1,11 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const adminSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
-    password: { type: String, required: true, select: false },
-    isVerified: { type: Boolean, default: false, required: true },
+    password: { type: String, required: true },
+    isVerified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

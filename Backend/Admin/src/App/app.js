@@ -14,6 +14,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/src/uploads", express.static(path.join(__dirname, "src", "uploads")));
 
-app.use("/", adminRouter);
+app.use("/auth", adminRouter);
 
 export default app;

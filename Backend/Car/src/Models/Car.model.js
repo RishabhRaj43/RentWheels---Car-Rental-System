@@ -68,19 +68,16 @@ const carSchema = new Schema(
         },
       },
     ],
-    rentedBy: [
+    images: [
       {
-        userId: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-        },
-        rentedAt: {
-          type: Date,
-          default: Date.now,
-        },
-        returnedAt: {
-          type: Date,
-        },
+        type: String,
+        required: [true, "Please upload at least one image"],
+      },
+    ],
+    rentals: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "RentCar",
       },
     ],
   },

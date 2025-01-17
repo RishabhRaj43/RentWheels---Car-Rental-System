@@ -16,8 +16,7 @@ const startServer = async (app) => {
       console.log(`Server running on port ${env.USER_AUTH_PORT}`);
     });
   } catch (error) {
-    console.log("Error connecting to RabbitMQ or database:", error.message);
-    setTimeout(startServer, 5000);
+    console.error("Error starting the server:", error);
   }
 };
 

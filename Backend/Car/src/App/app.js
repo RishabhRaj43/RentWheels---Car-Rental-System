@@ -7,7 +7,15 @@ import carRouter from "../Routes/CarRoutes.js";
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+// app.use((req, res, next) => {
+//   const contentType = req.headers["content-type"] || "";
+//   if (contentType.includes("multipart/form-data")) {
+//     next();
+//   } else {
+//     express.json()(req, res, next);
+//   }
+// });
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const __filename = fileURLToPath(import.meta.url);

@@ -15,12 +15,12 @@ export const initSocket = (server) => {
   io.use(socketMiddleware);
 
   io.on("connection", (socket) => {
-    if (!socket.email && !socket.userId) return socket.disconnect(true);
-    console.log(`User connected: ${socket.email}`);
+    if (!socket.userEmail && !socket.userId) return socket.disconnect(true);
+    console.log(`User connected: ${socket.userEmail}`);
     connectSocket.set(socket.userId, socket);
 
     socket.on("disconnect", () => {
-      console.log(`User disconnected: ${socket.email}`);
+      console.log(`User disconnected: ${socket.userEmail}`);
       connectSocket.delete(socket.userId);
     });
   });
