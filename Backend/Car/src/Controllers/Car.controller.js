@@ -181,7 +181,7 @@ export const deprecateCar = async (req, res) => {
       return res.status(404).json({ message: "Car not found" });
     }
 
-    car.isDeprecated = true;
+    car.isDeprecated = !car.isDeprecated;
     await car.save();
 
     const keys = cache.keys();
@@ -191,7 +191,11 @@ export const deprecateCar = async (req, res) => {
       }
     }
 
-    return res.status(200).json({ message: "Car deprecated successfully" });
+    return res
+      .status(200)
+      .json({
+        message: car.isDeprecated ? "Car deprecated" : "Car reactivated",
+      });
   } catch (error) {
     console.error("Error in deprecateCar controller: ", error.message);
     return res.status(500).json({ message: "Error deprecating car" });

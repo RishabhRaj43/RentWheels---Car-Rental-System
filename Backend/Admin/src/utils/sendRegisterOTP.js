@@ -1,5 +1,5 @@
 import { connection, channel } from "../Config/RabbitMQConfig.js";
-import cache from "../cache/cache.js";
+import cache from "../Config/cache/cache.js";
 import env from "../Env/env.js";
 import speakeasy from "speakeasy";
 

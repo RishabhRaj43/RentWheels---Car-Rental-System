@@ -1,4 +1,4 @@
-import cache from "../cache/cache.js";
+import cache from "../Config/cache/cache.js";
 import AdminModel from "../Models/Admin.model.js";
 import { generateOTP, sendRegisterOTP } from "../utils/sendRegisterOTP.js";
 import { registerAdminSchema } from "../Validation/admin.validation.js";
@@ -110,10 +110,7 @@ export const loginAdmin = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    const token = generateToken(
-      { email: admin.email, id: admin._id },
-      res
-    );
+    const token = generateToken({ email: admin.email, id: admin._id }, res);
     return res
       .status(200)
       .json({ token, admin, message: "Admin logged in successfully" });

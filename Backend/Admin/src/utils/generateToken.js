@@ -6,9 +6,13 @@ const generateToken = ({ email, id }, res) => {
     if (!env.JWT_ADMIN_SECRET) {
       throw new Error("JWT_ADMIN_SECRET is not defined");
     }
-    const token = jwt.sign({ email: email, id: id }, env.JWT_ADMIN_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { email: email, id: id, role: "admin" },
+      env.JWT_ADMIN_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
 
     res.cookie("token_admin", token, {
       httpOnly: true,

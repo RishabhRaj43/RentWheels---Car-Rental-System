@@ -6,9 +6,13 @@ const generateToken = ({ email, id }, res) => {
     if (!env.JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined");
     }
-    const token = jwt.sign({ email: email, id: id }, env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { email: email, id: id, role: "user" },
+      env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
 
     res.cookie("token_user", token, {
       httpOnly: true,

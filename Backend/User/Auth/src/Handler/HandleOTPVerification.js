@@ -19,6 +19,6 @@ export const handleOTPVerification = async () => {
     });
   } catch (error) {
     console.log("HandleOTPVerification Error: ", error);
-    throw new Error("Error Handling OTP Verification");
+    // throw new Error("Error Handling OTP Verification");
   }
 };

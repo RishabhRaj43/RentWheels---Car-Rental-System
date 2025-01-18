@@ -13,7 +13,7 @@ export const connectRabbitMq = async () => {
 
     return { connection, channel };
   } catch (error) {
-    throw new Error("Failed to connect to RabbitMQ");
+    console.error("Error connecting to RabbitMQ:", error.message);
   }
 };
 
