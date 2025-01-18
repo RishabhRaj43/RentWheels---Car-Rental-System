@@ -8,6 +8,8 @@ import {
 } from "../Controllers/Car.controller.js";
 import protectAdminRoute from "../Middlewares/protectAdminRoute.js";
 import { uploadMiddleware } from "../Middlewares/upload.middleware.js";
+import protectRoute from "../Middlewares/ProtectRoute.js";
+import { createReview } from "../Controllers/review.controller.js";
 
 const carRouter = Router();
 
@@ -22,5 +24,7 @@ carRouter.put(
   updateCar
 );
 carRouter.delete("/deprecate-car/:id", protectAdminRoute, deprecateCar);
+
+carRouter.post("/review-car", protectRoute, createReview);
 
 export default carRouter;
