@@ -1,34 +1,18 @@
 import multer from "multer";
-import fs from "fs";
-import path from "path";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "./cloudinaryConfig.js";
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = "./uploads";
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    if (!file.counter) {
-      file.counter = 1;
-    }
-    const fileName =
-      Date.now() + "-" + file.counter + path.extname(file.originalname);
-    file.counter++;
-    cb(null, fileName);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => {
+    const filename = req.body.model;
+    return {
+      folder: "car-images/" + filename,
+      allowed_formats: ["jpeg", "png", "jpg", "webp"],
+    };
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-  if (!allowedTypes.includes(file.mimetype)) {
-    return cb(new Error("Invalid file type"), false);
-  }
-  cb(null, true);
-};
-
-const upload = multer({ storage, fileFilter });
+const upload = multer({ storage });
 
 export default upload;

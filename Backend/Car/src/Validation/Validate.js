@@ -1,8 +1,6 @@
 import Joi from "joi";
 
 const carValidationSchema = Joi.object({
-  // i want to get data
-  
   name: Joi.string().required().messages({
     "string.empty": "Car name is required.",
     "any.required": "The 'name' field is required.",
@@ -60,31 +58,12 @@ const carValidationSchema = Joi.object({
   images: Joi.array().items(Joi.string()).messages({
     "array.base": "Images must be an array of strings.",
   }),
-  features: Joi.array().items(Joi.string()).messages({
-    "array.base": "Features must be an array of strings.",
+  features: Joi.string().messages({
+    "array.base": "Features must be string.",
   }),
   isAvailable: Joi.boolean().messages({
     "boolean.base": "isAvailable must be a boolean value.",
   }),
-  rentedBy: Joi.array()
-    .items(
-      Joi.object({
-        userId: Joi.string().required().messages({
-          "string.base": "User ID must be a string.",
-          "any.required": "Each rental must have a user ID.",
-        }),
-        rentedAt: Joi.date().required().messages({
-          "date.base": "Rented at must be a valid date.",
-          "any.required": "Each rental must have a rentedAt date.",
-        }),
-        returnedAt: Joi.date().optional().messages({
-          "date.base": "Returned at must be a valid date.",
-        }),
-      })
-    )
-    .messages({
-      "array.base": "RentedBy must be an array of rental records.",
-    }),
 });
 
 export default carValidationSchema;

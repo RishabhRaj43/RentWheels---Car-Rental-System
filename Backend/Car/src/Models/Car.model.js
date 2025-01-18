@@ -80,6 +80,10 @@ const carSchema = new Schema(
         ref: "RentCar",
       },
     ],
+    isDeprecated: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
