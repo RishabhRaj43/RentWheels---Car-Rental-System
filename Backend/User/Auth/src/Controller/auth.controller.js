@@ -30,8 +30,6 @@ export const registerUser = async (req, res) => {
     req.body.password = await bcryptjs.hash(req.body.password, 6);
 
     const user = new User(req.body);
-    // const otp = await generateOTP(user.email);
-    // await sendRegisterOTP(user.email, otp);
     cache.set(user.email, { ...user.toObject(), otp }, 60 * 5); // 5 minutes
 
     return res.status(200).json({ message: "OTP has been sent successfully" });

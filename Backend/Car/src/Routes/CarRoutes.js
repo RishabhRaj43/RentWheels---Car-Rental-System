@@ -8,7 +8,10 @@ import {
 } from "../Controllers/Car.controller.js";
 import { uploadMiddleware } from "../Middlewares/upload.middleware.js";
 import roleBasedProtect from "../Middlewares/ProtectRoute.js";
-import { createReview } from "../Controllers/review.controller.js";
+import {
+  createReview,
+  getAllReviews,
+} from "../Controllers/review.controller.js";
 
 const carRouter = Router();
 
@@ -30,9 +33,11 @@ carRouter.put(
 carRouter.delete("/deprecate-car/:id", roleBasedProtect("admin"), deprecateCar);
 
 carRouter.post(
-  "/review-car",
+  "/review-car/:id",
   roleBasedProtect(["user", "admin"]),
   createReview
 );
+
+carRouter.get("/get-all-review/:id", getAllReviews);
 
 export default carRouter;
