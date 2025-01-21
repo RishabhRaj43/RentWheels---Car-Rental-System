@@ -10,7 +10,6 @@ import { uploadMiddleware } from "../Middlewares/upload.middleware.js";
 import roleBasedProtect from "../Middlewares/ProtectRoute.js";
 import {
   createReview,
-  getAllReviews,
 } from "../Controllers/review.controller.js";
 
 const carRouter = Router();
@@ -37,7 +36,5 @@ carRouter.post(
   roleBasedProtect(["user", "admin"]),
   createReview
 );
-
-carRouter.get("/get-all-review/:id", getAllReviews);
 
 export default carRouter;

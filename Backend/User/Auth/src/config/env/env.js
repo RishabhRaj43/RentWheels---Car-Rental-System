@@ -8,7 +8,6 @@ const env = {
   JWT_SECRET: process.env.JWT_SECRET,
   ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
   RABBITMQ_URL: process.env.RABBITMQ_URL,
-  REGISTER_OTP_QUEUE: process.env.REGISTER_OTP_QUEUE,
   MAIL_USERNAME: process.env.MAIL_USERNAME,
   MAIL_PASSWORD: process.env.MAIL_PASSWORD,
   CLOUD_NAME: process.env.CLOUD_NAME,

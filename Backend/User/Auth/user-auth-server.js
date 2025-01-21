@@ -3,9 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
-import authRouter from "./src/Routes/auth.routes.js";
-import { closeRabbitMq } from "./src/Services/Mq/rabbitMq.js";
+import rabbitMQService from "./src/Services/Mq/rabbitMq.js";
 import startServer from "./src/Services/StartServer.js";
+import applyRoutes from "./src/Routes/index.js";
 
 const app = express();
 app.use(
@@ -22,12 +22,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/src/uploads", express.static(path.join(__dirname, "src", "uploads")));
 
-app.use("/", authRouter);
+applyRoutes(app);
 
 startServer(app);
 
 process.on("SIGINT", async () => {
   console.log("Shutting down the server...");
-  await closeRabbitMq();
+  await rabbitMQService.close();
   process.exit(0);
 });

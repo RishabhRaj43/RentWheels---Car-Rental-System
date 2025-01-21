@@ -1,13 +1,11 @@
 import env from "../Env/env.js";
-import { connection, connectRabbitMQ } from "../Config/RabbitMQConfig.js";
+import rabbitMQqueues from "../Env/RabbitMQ/rabbitMQ.q.js";
+import rabbitMQService from "../Services/RabbitMQService.js";
 import sendMail from "../utils/Mail/sendMail.js";
 
 export const handleOTPVerification = async () => {
   try {
-    if (!connection) {
-      connection = await connectRabbitMQ();
-    }
-    const channel = await connection.createChannel();
+    const channel = await rabbitMQService.getChannel();
     const queueName = env.REGISTER_OTP_QUEUE;
     await channel.assertQueue(queueName, { durable: true });
     channel.consume(queueName, async (msg) => {

@@ -1,4 +1,4 @@
-import cache from "../cache/cache.js";
+import cache from "../config/cache/cache.js";
 import User from "../Model/User.model.js";
 import generateToken from "../utils/generateToken.js";
 import bcryptjs from "bcryptjs";
@@ -30,7 +30,7 @@ export const registerUser = async (req, res) => {
     req.body.password = await bcryptjs.hash(req.body.password, 6);
 
     const user = new User(req.body);
-    cache.set(user.email, { ...user.toObject(), otp }, 60 * 5); // 5 minutes
+    cache.set(user.email, { ...user.toObject() }, 60 * 5); // 5 minutes
 
     return res.status(200).json({ message: "OTP has been sent successfully" });
   } catch (error) {
@@ -89,7 +89,7 @@ export const resendOtp = async (req, res) => {
     cache.set(email, { ...cachedUser, otp }, 60 * 5); // 5 minutes
     return res.status(200).json({ message: "OTP has been sent successfully" });
   } catch (error) {
-    console.log(error);
+    console.error("Error in resendOtp:", error.message);
     return res.status(400).json({ message: error.message });
   }
 };
@@ -173,17 +173,19 @@ export const updateUser = async (req, res) => {
       req.body.password = hashedPassword;
     }
 
-    const user = await User.findOne({ email: req.userEmail });
+    const userEmail = req.email;
+
+    const user = await User.findOne({ email: userEmail });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
     const updatedUser = await User.findOneAndUpdate(
-      { email: req.userEmail },
+      { email: userEmail },
       req.body,
       { new: true }
     );
     let token;
-    if (req.body.email && req.body.email !== req.userEmail) {
+    if (req.body.email && req.body.email !== userEmail) {
       token = generateToken(updatedUser.email, res);
     }
     cache.set(user.email, updatedUser);

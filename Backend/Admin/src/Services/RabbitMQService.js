@@ -1,5 +1,5 @@
 import ampqlib from "amqplib";
-import env from "../../config/env/env.js";
+import env from "../Env/env.js";
 
 class RabbitMQService {
   constructor() {

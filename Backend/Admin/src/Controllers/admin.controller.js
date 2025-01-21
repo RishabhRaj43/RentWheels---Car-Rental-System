@@ -26,8 +26,6 @@ export const registerAdmin = async (req, res) => {
     req.body.password = await bcrypt.hash(req.body.password, 6);
 
     const admin = new AdminModel(req.body);
-    // const otp = await generateOTP(admin.email);
-    // await sendRegisterOTP(admin.email, otp);
     cache.set(admin.email, admin.toObject(), { ttl: 5 * 60 }); // 5 minutes
     res.status(201).json({ message: "Please verify your otp..." });
   } catch (error) {

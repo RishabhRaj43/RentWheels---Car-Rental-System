@@ -1,5 +1,6 @@
-import { connection, channel } from "../Services/Mq/rabbitMq.js";
-import cache from "../cache/cache.js";
+import rabbitMQService from "../Services/Mq/rabbitMq.js";
+import cache from "../config/cache/cache.js";
+import rabbitMQqueues from "../config/env/RabbitMQ/rabbitMQ.q.js";
 import env from "../config/env/env.js";
 import speakeasy from "speakeasy";
 
@@ -16,9 +17,8 @@ export const generateOTP = async (email) => {
 
 export const sendRegisterOTP = async (email, otp) => {
   try {
-    if (!connection) await connectRabbitMq();
-    if (!channel) await connection.createChannel();
-    const queueName = env.REGISTER_OTP_QUEUE;
+    const channel = await rabbitMQService.getChannel();
+    const queueName = rabbitMQqueues.REGISTER_OTP_QUEUE;
     await channel.assertQueue(queueName, { durable: true });
     channel.sendToQueue(
       queueName,

@@ -1,13 +1,13 @@
 import app from "./src/App/app.js";
 import connectDB from "./src/Config/dbConfig.js";
-import { connectRabbitMQ } from "./src/Config/RabbitMQConfig.js";
+import rabbitMQService from "./src/Services/RabbitMQService.js";
 import env from "./src/Env/env.js";
 import { startBackgroundJobs } from "./src/Handler/StartBackgroundJobs.js";
 
 const startServer = async () => {
   try {
     await connectDB();
-    await connectRabbitMQ();
+    await rabbitMQService.connect();
     await startBackgroundJobs();
 
     app.listen(env.PORT, () => {

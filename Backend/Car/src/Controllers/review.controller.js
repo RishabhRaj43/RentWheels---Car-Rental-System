@@ -36,19 +36,3 @@ export const createReview = async (req, res) => {
   }
 };
 
-export const getAllReviews = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const car = await Car.findById(id)
-    .populate("reviews.userId", "email");
-
-    if (!car) {
-      return res.status(404).json({ message: "Car not found" });
-    }
-
-    return res.status(200).json({ reviews: car });
-  } catch (error) {
-    console.error("Error in getAllReviews controller: ", error.message);
-    return res.status(500).json({ message: "Error getting reviews" });
-  }
-};

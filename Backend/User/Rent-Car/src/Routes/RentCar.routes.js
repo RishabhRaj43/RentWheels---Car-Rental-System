@@ -1,17 +1,16 @@
 import express from "express";
-import { rentCarController } from "../Controllers/RentCar.controller.js";
+import {
+  getAllRentalsController,
+  rentCarController,
+} from "../Controllers/RentCar.controller.js";
 import roleBasedProtect from "../Middlewares/ProtectRoute.js";
 
 const rentCarRouter = express.Router();
 
 rentCarRouter.get(
-  "/",
+  "/get-all-reviews/:carId",
   roleBasedProtect(["user", "admin"]),
-  async (req, res) => {
-    res.json({
-      message: "Hello User",
-    });
-  }
+  getAllRentalsController
 );
 
 rentCarRouter.post("/rent-car", roleBasedProtect(["user"]), rentCarController);
