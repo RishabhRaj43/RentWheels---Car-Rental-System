@@ -13,17 +13,15 @@ export const rentcarBooking = async () => {
       async (msg) => {
         if (msg) {
           const data = JSON.parse(msg.content.toString());
-          const user = await User.findById(data.userId);
-          // await User.findByIdAndUpdate(
-          //   data.userId,
-          //   {
-          //     $push: { Rentals: data.rentalId },
-          //   },
-          //   { new: true }
-          // );
-          user.Rentals.push(data._id);
-          console.log("user.Rentals: ", user.Rentals);
-
+          await User.findByIdAndUpdate(
+            data.userId,
+            {
+              $addToSet: {
+                Rentals: data._id,
+              },
+            },
+            { new: true }
+          );
           channel.ack(msg);
         }
       },

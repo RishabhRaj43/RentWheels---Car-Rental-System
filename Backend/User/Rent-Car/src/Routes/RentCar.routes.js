@@ -2,6 +2,7 @@ import express from "express";
 import {
   getAllRentalsController,
   rentCarController,
+  test,
 } from "../Controllers/RentCar.controller.js";
 import roleBasedProtect from "../Middlewares/ProtectRoute.js";
 

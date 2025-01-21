@@ -13,9 +13,18 @@ export const rentCarBooking = async () => {
       async (msg) => {
         if (msg) {
           const data = JSON.parse(msg.content.toString());
-          console.log("Rental Car:", data);
-
+          await Car.findByIdAndUpdate(
+            data.carId,
+            {
+              $addToSet: {
+                rentals: data._id,
+              },
+            },
+            { new: true }
+          );
           channel.ack(msg);
+        } else {
+          console.log("No message received");
         }
       },
       { noAck: false }

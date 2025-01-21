@@ -28,6 +28,7 @@ class RabbitMQService {
       }
     }
   }
+
   async getChannel() {
     if (!this.channel) {
       await this.connect();

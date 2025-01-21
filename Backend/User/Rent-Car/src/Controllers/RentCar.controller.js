@@ -1,9 +1,7 @@
 import api from "../Apis/api.js";
-import env from "../Config/Env/env.js";
 import { rabbitMQqueues } from "../Config/Env/RabbitMQ/RabbitMQ.q.js";
 import RentCar from "../Models/RentCar.model.js";
 import { publishMessage } from "../Services/MQ/RabbitMQProducer.js";
-import rabbitMQService from "../Services/MQ/RabbitMQService.js";
 
 export const rentCarController = async (req, res) => {
   try {
@@ -24,12 +22,14 @@ export const rentCarController = async (req, res) => {
         to: "car",
       }),
       publishMessage(rabbitMQqueues.RENT_CAR_FOR_USER, {
-        ...rental.toObject(),
-        to: "user",
+        rental: rental.toObject(),
+      }),
+      publishMessage("test", {
+        rental: rental.toObject(),
       }),
     ]);
 
-    // await rental.save();
+    await rental.save();
     return res.status(200).json({ message: "Processing your request..." });
   } catch (error) {
     console.error("Error in RentCarController: ", error.message);
