@@ -12,7 +12,7 @@ export const rentCarBooking = async () => {
       rabbitMQqueues.RENT_CAR_FOR_CAR,
       async (msg) => {
         if (msg) {
-          const data = JSON.parse(msg.content.toString());
+          const data = JSON.parse(msg.content.toString()).rental;
           await Car.findByIdAndUpdate(
             data.carId,
             {
@@ -21,6 +21,19 @@ export const rentCarBooking = async () => {
               },
             },
             { new: true }
+          );
+
+          channel.assertQueue(rabbitMQqueues.RENT_CAR_APPROVED_BY_CAR, {
+            durable: true,
+          });
+          channel.sendToQueue(
+            rabbitMQqueues.RENT_CAR_APPROVED_BY_CAR,
+            Buffer.from(
+              JSON.stringify({
+                rentalId: data._id,
+                status: "approved",
+              })
+            )
           );
           channel.ack(msg);
         } else {

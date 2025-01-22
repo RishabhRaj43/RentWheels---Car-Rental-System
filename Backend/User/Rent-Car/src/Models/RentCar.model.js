@@ -1,4 +1,4 @@
-import mongoose,{ Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const rentCarSchema = new Schema(
   {
@@ -7,9 +7,18 @@ const rentCarSchema = new Schema(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     totalAmount: { type: Number },
+    carAck: { type: Boolean, default: false },
+    userAck: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected", "active"],
+      enum: [
+        "pending",
+        "approved",
+        "rejected",
+        "active",
+        "completed",
+        "cancelled",
+      ],
       default: "pending",
     },
   },
